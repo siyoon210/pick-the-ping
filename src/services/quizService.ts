@@ -13,12 +13,12 @@ export async function getQuizzes(quizSize = 10): Promise<Quiz[]> {
     const randomSelectedTeenieping = getRandomElement(randomSelectedTeeniepings);
 
     const quiz: Quiz = {
-      question: { nameKo: randomSelectedTeenieping.nameKo, nameEn: randomSelectedTeenieping.nameEn },
+      question: {nameKo: randomSelectedTeenieping.nameKo, nameEn: randomSelectedTeenieping.nameEn},
       options: randomSelectedTeeniepings.map((teenieping) => {
         const encryptedNameKo = base64Encrypt(teenieping.nameKo);
         const encryptedNameEn = base64Encrypt(teenieping.nameEn);
         const imageUrl = getRandomElement(teeniepingImages[teenieping.id]);
-        return { encryptedNameKo, encryptedNameEn, imageUrl };
+        return {encryptedNameKo, encryptedNameEn, imageUrl};
       }),
     };
 

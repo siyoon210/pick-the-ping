@@ -1,4 +1,15 @@
 type Quiz = {
-  question: { nameKo: string, nameEn: string },
-  options: { encryptedNameKo: string, encryptedNameEn: string, imageUrl: string }[]
+  question: QuizQuestion,
+  options: QuizOption[]
+}
+
+type QuizQuestion = {
+  nameKo: string,
+  nameEn: string
+}
+
+type QuizOption = {
+  encryptedNameKo: string,
+  encryptedNameEn: string,
+  imageUrl: string
 }
