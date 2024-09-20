@@ -4,6 +4,7 @@ import {Award, Clock} from "lucide-react";
 import {useEffect, useState} from 'react';
 import {base64Decrypt} from "@/utils/encrypt";
 import QuizOptionButton from "@/components/QuizOptionButton";
+import {useRouter} from 'next/navigation';
 
 const CORRECT_TIMEOUT = 300
 const INCORRECT_TIMEOUT = 1800
@@ -15,6 +16,7 @@ export default function QuizSection() {
   const [selectedNameKo, setSelectedNameKo] = useState<string | null>(null)
   const [quizzes, setQuizzes] = useState<Quiz[]>([])
   const [quiz, setQuiz] = useState<Quiz>()
+  const router = useRouter();
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -24,7 +26,7 @@ export default function QuizSection() {
         setTimer((prevTime) => prevTime - 1);
       }, 1000);
     } else if (timer === 0) {
-      console.log('타이머가 0초에 도달했습니다!');
+      router.push(`/quiz-end?score=${score}`);
     }
 
     return () => clearInterval(interval);

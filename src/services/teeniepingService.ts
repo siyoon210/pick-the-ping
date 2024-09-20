@@ -2,9 +2,9 @@ import {createSupabaseServerClient} from '@/utils/supabase/server';
 
 export async function getTeeniepings(): Promise<Teenieping[]> {
   const supabaseClient = createSupabaseServerClient();
-  const {data} = await supabaseClient.from("teenieping").select('*');
-  if (data === null) {
-    console.error("No data found from teenieping");
+  const {data, error} = await supabaseClient.from("teenieping").select('*');
+  if (data === null || error) {
+    console.error("No data found from teenieping. Error: ", error);
     return [];
   }
   return data.map((row: any) => {
