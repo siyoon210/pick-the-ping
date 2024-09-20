@@ -144,24 +144,24 @@ INSERT INTO "public"."teenieping" ("id", "name_ko", "name_en", "created_at") VAL
 --
 
 INSERT INTO "public"."teenieping_image" ("id", "teenieping_id", "image_url", "created_at") VALUES
-	(1, 1, '/img/teenieping/heartsping.webp', '2024-09-20 01:28:39.881857+00'),
-	(2, 2, '/img/teenieping/dadaping.webp', '2024-09-20 01:28:39.881857+00'),
-	(3, 3, '/img/teenieping/gogoping.webp', '2024-09-20 01:28:39.881857+00'),
-	(4, 4, '/img/teenieping/chachaping.webp', '2024-09-20 01:28:39.881857+00'),
-	(5, 5, '/img/teenieping/lalaping.webp', '2024-09-20 01:28:39.881857+00'),
-	(6, 6, '/img/teenieping/happying.webp', '2024-09-20 01:28:39.881857+00'),
-	(7, 7, '/img/teenieping/joahping.webp', '2024-09-20 01:28:39.881857+00'),
-	(8, 8, '/img/teenieping/teeheeping.webp', '2024-09-20 01:28:39.881857+00'),
-	(9, 9, '/img/teenieping/trustping.webp', '2024-09-20 01:28:39.881857+00'),
-	(10, 10, '/img/teenieping/okeydokeyping.webp', '2024-09-20 01:28:39.881857+00'),
-	(11, 11, '/img/teenieping/nanaping.webp', '2024-09-20 01:28:39.881857+00'),
-	(12, 12, '/img/teenieping/trueping.webp', '2024-09-20 01:28:39.881857+00'),
-	(13, 13, '/img/teenieping/fluffyping.webp', '2024-09-20 01:28:39.881857+00'),
-	(14, 14, '/img/teenieping/jellyping.webp', '2024-09-20 01:28:39.881857+00'),
-	(15, 15, '/img/teenieping/shashaping.webp', '2024-09-20 01:28:39.881857+00'),
-	(16, 16, '/img/teenieping/shimmerping.webp', '2024-09-20 01:28:39.881857+00'),
-	(17, 17, '/img/teenieping/sparkelping.webp', '2024-09-20 01:28:39.881857+00'),
-	(18, 18, '/img/teenieping/twinkelping.webp', '2024-09-20 01:28:39.881857+00');
+	(1, 1, '/img/teenieping/1.webp', '2024-09-20 01:28:39.881857+00'),
+	(2, 2, '/img/teenieping/2.webp', '2024-09-20 01:28:39.881857+00'),
+	(3, 3, '/img/teenieping/3.webp', '2024-09-20 01:28:39.881857+00'),
+	(4, 4, '/img/teenieping/4.webp', '2024-09-20 01:28:39.881857+00'),
+	(5, 5, '/img/teenieping/5.webp', '2024-09-20 01:28:39.881857+00'),
+	(6, 6, '/img/teenieping/6.webp', '2024-09-20 01:28:39.881857+00'),
+	(7, 7, '/img/teenieping/7.webp', '2024-09-20 01:28:39.881857+00'),
+	(8, 8, '/img/teenieping/8.webp', '2024-09-20 01:28:39.881857+00'),
+	(9, 9, '/img/teenieping/9.webp', '2024-09-20 01:28:39.881857+00'),
+	(10, 10, '/img/teenieping/10.webp', '2024-09-20 01:28:39.881857+00'),
+	(11, 11, '/img/teenieping/11.webp', '2024-09-20 01:28:39.881857+00'),
+	(12, 12, '/img/teenieping/12.webp', '2024-09-20 01:28:39.881857+00'),
+	(13, 13, '/img/teenieping/13.webp', '2024-09-20 01:28:39.881857+00'),
+	(14, 14, '/img/teenieping/14.webp', '2024-09-20 01:28:39.881857+00'),
+	(15, 15, '/img/teenieping/15.webp', '2024-09-20 01:28:39.881857+00'),
+	(18, 18, '/img/teenieping/18.webp', '2024-09-20 01:28:39.881857+00'),
+	(17, 17, '/img/teenieping/17.webp', '2024-09-20 01:28:39.881857+00'),
+	(16, 16, '/img/teenieping/16.webp', '2024-09-20 01:28:39.881857+00');
 
 
 --
