@@ -1,21 +1,47 @@
 import Image from "next/image";
 import QuizOptionResultDeco from "@/components/QuizOptionResultDeco";
+import {base64Decrypt} from "@/utils/encrypt";
 
 type QuizOptionButtonProps = {
   option: QuizOption;
   index: number;
-  selectedNameKo: string | null;
   quizQuestion: QuizQuestion;
-  selectImage: (selectedOption: QuizOption) => () => void;
+  selectedNameKo: string | null;
+  setSelectedNameKo: (nameKo: string) => void;
+  setScore: (prevScore: (prev: number) => number) => void;
+  setNextQuiz: () => void;
 };
+
+const CORRECT_TIMEOUT = 250
+const INCORRECT_TIMEOUT = 1800
 
 export default function QuizOptionButton({
                                            option,
                                            index,
-                                           selectedNameKo,
                                            quizQuestion,
-                                           selectImage,
+                                           selectedNameKo,
+                                           setSelectedNameKo,
+                                           setScore,
+                                           setNextQuiz,
                                          }: QuizOptionButtonProps) {
+  const selectImage = (selectedOption: QuizOption) => {
+    return () => {
+      const selectedOptionNameKo = base64Decrypt(selectedOption.encryptedNameKo);
+      if (selectedOptionNameKo === quizQuestion.nameKo) {
+        setSelectedNameKo(selectedOptionNameKo)
+        setScore((prevScore) => prevScore + 1)
+        setTimeout(() => {
+          setNextQuiz()
+        }, CORRECT_TIMEOUT)
+      } else {
+        setSelectedNameKo(selectedOptionNameKo)
+        setTimeout(() => {
+          setNextQuiz()
+        }, INCORRECT_TIMEOUT)
+      }
+    };
+  }
+
   return (
     <button
       key={index}

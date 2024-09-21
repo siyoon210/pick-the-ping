@@ -2,59 +2,37 @@
 
 import {Award, Clock} from "lucide-react";
 import {useEffect, useState} from 'react';
-import {base64Decrypt} from "@/utils/encrypt";
 import QuizOptionButton from "@/components/QuizOptionButton";
 import {useRouter} from 'next/navigation';
+import {useTimer} from "@/hooks/useTimer";
 
 const INIT_TIME = 60
-const CORRECT_TIMEOUT = 250
-const INCORRECT_TIMEOUT = 1800
 
 export default function QuizSection() {
-  const [timer, setTimer] = useState(INIT_TIME)
-  const [isTimerPaused, setIsTimerPaused] = useState(true)
   const [score, setScore] = useState(0)
   const [selectedNameKo, setSelectedNameKo] = useState<string | null>(null)
   const [quizzes, setQuizzes] = useState<Quiz[]>([])
   const [quiz, setQuiz] = useState<Quiz>()
   const router = useRouter();
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (!isTimerPaused && timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prevTime) => prevTime - 1);
-      }, 1000);
-    } else if (timer === 0) {
-      router.push(`/quiz-end?score=${score}`);
-    }
-
-    return () => clearInterval(interval);
-  }, [timer, isTimerPaused]);
+  const {timer, setIsTimerPaused} = useTimer(INIT_TIME, () => router.push(`/quiz-end?score=${score}`));
 
   useEffect(() => {
     pauseTimerAndFetchQuizzes();
   }, []);
 
   const pauseTimerAndFetchQuizzes = () => {
-    setIsTimerPaused(true)
-    fetchQuizzes()
-      .then(quizzes => {
-        initQuiz(quizzes);
-        setIsTimerPaused(false)
+    setIsTimerPaused(true);
+    console.log('Fetching quizzes.');
+    fetch('/api/quiz')
+      .then(response => response.json())
+      .then(responseQuizzes => {
+        initQuiz(responseQuizzes);
+        setIsTimerPaused(false);
+      })
+      .catch(error => {
+        console.error('Error fetching quizzes:', error);
+        pauseTimerAndFetchQuizzes();
       });
-  };
-
-  const fetchQuizzes = async (): Promise<Quiz[]> => {
-    try {
-      console.log('Fetching quizzes.');
-      const response = await fetch('/api/quiz');
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching quizzes:', error);
-      return [];
-    }
   };
 
   const initQuiz = (quizzes: Quiz[]) => {
@@ -62,24 +40,6 @@ export default function QuizSection() {
     setSelectedNameKo(null)
     setQuizzes(quizzes)
   };
-
-  const selectImage = (selectedOption: QuizOption) => {
-    return () => {
-      const selectedOptionNameKo = base64Decrypt(selectedOption.encryptedNameKo);
-      if (selectedOptionNameKo === quiz?.question.nameKo) {
-        setSelectedNameKo(selectedOptionNameKo)
-        setScore((prevScore) => prevScore + 1)
-        setTimeout(() => {
-          setNextQuiz()
-        }, CORRECT_TIMEOUT)
-      } else {
-        setSelectedNameKo(selectedOptionNameKo)
-        setTimeout(() => {
-          setNextQuiz()
-        }, INCORRECT_TIMEOUT)
-      }
-    };
-  }
 
   const setNextQuiz = () => {
     if (quizzes.length > 0) {
@@ -115,9 +75,11 @@ export default function QuizSection() {
             key={index}
             option={option}
             index={index}
-            selectedNameKo={selectedNameKo}
             quizQuestion={quiz.question}
-            selectImage={selectImage}
+            selectedNameKo={selectedNameKo}
+            setSelectedNameKo={setSelectedNameKo}
+            setScore={setScore}
+            setNextQuiz={setNextQuiz}
           />
         ))}
       </div>
