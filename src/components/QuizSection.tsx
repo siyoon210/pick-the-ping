@@ -6,11 +6,12 @@ import {base64Decrypt} from "@/utils/encrypt";
 import QuizOptionButton from "@/components/QuizOptionButton";
 import {useRouter} from 'next/navigation';
 
-const CORRECT_TIMEOUT = 300
+const INIT_TIME = 60
+const CORRECT_TIMEOUT = 250
 const INCORRECT_TIMEOUT = 1800
 
 export default function QuizSection() {
-  const [timer, setTimer] = useState(10)
+  const [timer, setTimer] = useState(INIT_TIME)
   const [isTimerPaused, setIsTimerPaused] = useState(true)
   const [score, setScore] = useState(0)
   const [selectedNameKo, setSelectedNameKo] = useState<string | null>(null)

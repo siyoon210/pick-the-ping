@@ -8,6 +8,8 @@ type RankingListProps = {
   pageSize: number;
 };
 
+// todo 로딩
+// todo 페이징
 export default function RankingList({page, pageSize}: RankingListProps) {
   const [showScoreRanking, setShowScoreRanking] = useState(false)
   const [rankings, setRankings] = useState<Ranking[]>([])

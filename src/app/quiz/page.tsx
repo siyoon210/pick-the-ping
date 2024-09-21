@@ -2,6 +2,7 @@ import {Home} from 'lucide-react'
 import Link from 'next/link'
 import QuizSection from "@/components/QuizSection";
 
+// todo 로딩
 export default async function Page() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
