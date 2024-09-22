@@ -4,7 +4,12 @@ import {createSupabaseServerClient} from "@/utils/supabase/server";
 import {generateRandomToken} from "@/utils/token";
 import {insertQuizPublishLog} from "@/services/quizLogService";
 
-export async function GET(request: Request): Promise<NextResponse<Quiz[]>> {
+type GetResponse = {
+  quizzes: Quiz[];
+  quizToken: string;
+}
+
+export async function GET(request: Request): Promise<NextResponse<GetResponse>> {
   const supabaseClient = createSupabaseServerClient();
 
   const quizzes = await getQuizzes(supabaseClient);
@@ -13,5 +18,5 @@ export async function GET(request: Request): Promise<NextResponse<Quiz[]>> {
   const quizToken = searchParams.get('quiz-token') || generateRandomToken();
   await insertQuizPublishLog(supabaseClient, quizToken, quizzes);
 
-  return NextResponse.json(quizzes);
+  return NextResponse.json({quizzes, quizToken});
 }

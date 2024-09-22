@@ -1,43 +1,55 @@
 import Image from "next/image";
 import QuizOptionResultDeco from "@/components/QuizOptionResultDeco";
 import {base64Decrypt} from "@/utils/encrypt";
+import {timeoutPromise} from "@/utils/timeout";
 
 type QuizOptionButtonProps = {
   option: QuizOption;
   index: number;
   quizQuestion: QuizQuestion;
+  quizToken: string;
   selectedNameKo: string | null;
   setSelectedNameKo: (nameKo: string) => void;
   setScore: (prevScore: (prev: number) => number) => void;
   setNextQuiz: () => void;
 };
 
-const CORRECT_TIMEOUT = 250
-const INCORRECT_TIMEOUT = 1800
+const CORRECT_TIMEOUT_MS = 250
+const INCORRECT_TIMEOUT_MS = 1800
 
 export default function QuizOptionButton({
                                            option,
                                            index,
+                                           quizToken,
                                            quizQuestion,
                                            selectedNameKo,
                                            setSelectedNameKo,
                                            setScore,
                                            setNextQuiz,
                                          }: QuizOptionButtonProps) {
+  const postQuizLog = (selectedOption: QuizOption) => {
+    const question = quizQuestion.nameKo
+    const selectedOptionNameKo = selectedOption.encryptedNameKo
+
+    return fetch(`/api/quiz-log?quiz-token=${quizToken}&question=${encodeURIComponent(question)}&selected-option=${encodeURIComponent(selectedOptionNameKo)}`, {
+      method: 'POST'
+    })
+  }
+
   const selectImage = (selectedOption: QuizOption) => {
     return () => {
       const selectedOptionNameKo = base64Decrypt(selectedOption.encryptedNameKo);
       if (selectedOptionNameKo === quizQuestion.nameKo) {
         setSelectedNameKo(selectedOptionNameKo)
         setScore((prevScore) => prevScore + 1)
-        setTimeout(() => {
-          setNextQuiz()
-        }, CORRECT_TIMEOUT)
+        Promise.all([postQuizLog(selectedOption), timeoutPromise(CORRECT_TIMEOUT_MS)]).then(() => {
+          setNextQuiz();
+        });
       } else {
         setSelectedNameKo(selectedOptionNameKo)
-        setTimeout(() => {
-          setNextQuiz()
-        }, INCORRECT_TIMEOUT)
+        Promise.all([postQuizLog(selectedOption), timeoutPromise(INCORRECT_TIMEOUT_MS)]).then(() => {
+          setNextQuiz();
+        });
       }
     };
   }

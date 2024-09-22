@@ -13,6 +13,7 @@ export default function QuizSection() {
   const [selectedNameKo, setSelectedNameKo] = useState<string | null>(null)
   const [quizzes, setQuizzes] = useState<Quiz[]>([])
   const [quiz, setQuiz] = useState<Quiz>()
+  const [quizToken, setQuizToken] = useState<string>("")
   const router = useRouter();
   const {timer, setIsTimerPaused} = useTimer(INIT_TIME, () => router.push(`/quiz-end?score=${score}`));
 
@@ -23,10 +24,11 @@ export default function QuizSection() {
   const pauseTimerAndFetchQuizzes = () => {
     setIsTimerPaused(true);
     console.log('Fetching quizzes.');
-    fetch('/api/quiz')
+    fetch(`/api/quiz?quiz-token=${quizToken}`)
       .then(response => response.json())
       .then(responseQuizzes => {
-        initQuiz(responseQuizzes);
+        setQuizToken(responseQuizzes.quizToken);
+        initQuiz(responseQuizzes.quizzes);
         setIsTimerPaused(false);
       })
       .catch(error => {
@@ -75,6 +77,7 @@ export default function QuizSection() {
             key={index}
             option={option}
             index={index}
+            quizToken={quizToken}
             quizQuestion={quiz.question}
             selectedNameKo={selectedNameKo}
             setSelectedNameKo={setSelectedNameKo}
