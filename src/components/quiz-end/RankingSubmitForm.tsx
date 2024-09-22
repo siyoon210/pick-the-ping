@@ -2,13 +2,12 @@
 
 import {useState} from "react";
 import {useRouter} from 'next/navigation';
+import {MESSAGE_INPUT_LENGTH, NAME_INPUT_LENGTH} from "@/constants/ranking_constant";
 
 type ResultSubmitFormProps = {
   score: number;
 };
 
-// todo XSS, SQL인젝션
-// todo 최대 글자 제한
 export default function RankingSubmitForm({score}: ResultSubmitFormProps) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
@@ -51,6 +50,7 @@ export default function RankingSubmitForm({score}: ResultSubmitFormProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+          maxLength={NAME_INPUT_LENGTH}
           required
         />
       </div>
@@ -63,6 +63,7 @@ export default function RankingSubmitForm({score}: ResultSubmitFormProps) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+          maxLength={MESSAGE_INPUT_LENGTH}
           rows={2}
         />
       </div>

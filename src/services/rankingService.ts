@@ -1,5 +1,6 @@
 import {SupabaseClient} from "@supabase/supabase-js";
 import {validate} from "@/services/quizValidationService";
+import {MESSAGE_INPUT_LENGTH, NAME_INPUT_LENGTH} from "@/constants/ranking_constant";
 
 export async function getRankings(supabaseClient: SupabaseClient, page: number, pageSize: number, orderByScore: boolean): Promise<Ranking[]> {
   const from = (page - 1) * pageSize;
@@ -54,8 +55,8 @@ export async function insertRanking(supabaseClient: SupabaseClient, ranking: Ran
     .insert([
       {
         score: ranking.score,
-        name: ranking.name,
-        message: ranking.message,
+        name: ranking.name.slice(0, NAME_INPUT_LENGTH),
+        message: ranking.message.slice(0, MESSAGE_INPUT_LENGTH),
         quiz_token: quizToken
       }
     ]);
