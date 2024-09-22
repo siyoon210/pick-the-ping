@@ -1,4 +1,5 @@
 import {SupabaseClient} from "@supabase/supabase-js";
+import {validate} from "@/services/quizValidationService";
 
 export async function getRankings(supabaseClient: SupabaseClient, page: number, pageSize: number, orderByScore: boolean): Promise<Ranking[]> {
   const from = (page - 1) * pageSize;
@@ -40,8 +41,14 @@ const selectRankingOrderByCreatedAt = async (supabaseClient: SupabaseClient, fro
     .range(from, to);
 };
 
-export async function insertRanking(supabaseClient: SupabaseClient, ranking: Ranking): Promise<void> {
-  console.log("Inserting ranking: ", ranking);
+export async function insertRanking(supabaseClient: SupabaseClient, ranking: Ranking, quizToken: string): Promise<void> {
+  console.log(`Inserting ranking: ${JSON.stringify(ranking)} / quizToken: ${quizToken}`);
+
+  const isValidQuiz = await validate(supabaseClient, quizToken);
+  if(!isValidQuiz) {
+    return
+  }
+
   const {error} = await supabaseClient
     .from('ranking')
     .insert([
@@ -49,6 +56,7 @@ export async function insertRanking(supabaseClient: SupabaseClient, ranking: Ran
         score: ranking.score,
         name: ranking.name,
         message: ranking.message,
+        quiz_token: quizToken
       }
     ]);
 

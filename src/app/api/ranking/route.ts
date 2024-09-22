@@ -4,9 +4,16 @@ import {createSupabaseServerClient} from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
   const supabaseClient = createSupabaseServerClient();
+
+  const {searchParams} = new URL(request.url);
+  const quizToken = searchParams.get('quiz-token');
+
+  if (!quizToken) {
+    return NextResponse.redirect('/ranking');
+  }
+
   const body = await request.json();
-  console.log('Request body:', body);
-  await insertRanking(supabaseClient, body);
+  await insertRanking(supabaseClient, body, quizToken);
   return new NextResponse(null, {status: 201});
 }
 
