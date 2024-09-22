@@ -5,8 +5,7 @@ import {useEffect, useState} from 'react';
 import QuizOptionButton from "@/components/QuizOptionButton";
 import {useRouter} from 'next/navigation';
 import {useTimer} from "@/hooks/useTimer";
-
-const INIT_TIME = 60
+import {QUIZ_LIMIT_TIME_SECONDS} from "@/constants/quiz_constant";
 
 export default function QuizSection() {
   const [score, setScore] = useState(0)
@@ -15,7 +14,7 @@ export default function QuizSection() {
   const [quiz, setQuiz] = useState<Quiz>()
   const [quizToken, setQuizToken] = useState<string>("")
   const router = useRouter();
-  const {timer, setIsTimerPaused} = useTimer(INIT_TIME, () => router.push(`/quiz-end?quiz-token=${quizToken}`));
+  const {timer, setIsTimerPaused} = useTimer(QUIZ_LIMIT_TIME_SECONDS, () => router.push(`/quiz-end?quiz-token=${quizToken}`));
 
   useEffect(() => {
     pauseTimerAndFetchQuizzes();
@@ -79,6 +78,7 @@ export default function QuizSection() {
             index={index}
             quizToken={quizToken}
             quizQuestion={quiz.question}
+            timer={timer}
             selectedNameKo={selectedNameKo}
             setSelectedNameKo={setSelectedNameKo}
             setScore={setScore}

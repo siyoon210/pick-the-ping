@@ -7,6 +7,8 @@ type ResultSubmitFormProps = {
   score: number;
 };
 
+// todo XSS, SQL인젝션
+// todo 최대 글자 제한
 export default function RankingSubmitForm({score}: ResultSubmitFormProps) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')

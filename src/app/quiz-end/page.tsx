@@ -5,22 +5,24 @@ import RankingList from "@/components/ranking/RankingList"
 import {redirect} from 'next/navigation';
 import {getTotalScore} from "@/services/scoreService";
 import {createSupabaseServerClient} from "@/utils/supabase/server";
+import {validate} from "@/services/quizValidationService";
 
-// todo 점수 검증 (실제로 가능한 점수인지)
-// todo XSS, SQL인젝션
-// todo 최대 글자 제한
 export default async function Page({searchParams}: {
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
   const supabaseClient = createSupabaseServerClient();
 
   const quizToken = searchParams['quiz-token'] as string;
-
   if (!quizToken) {
     redirect('/ranking');
   }
 
   const totalScore = await getTotalScore(supabaseClient, quizToken);
+
+  const isValidQuiz = await validate(supabaseClient, quizToken);
+  if (!isValidQuiz) {
+    redirect('/ranking');
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">

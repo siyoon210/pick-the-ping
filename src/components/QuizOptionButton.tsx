@@ -7,6 +7,7 @@ type QuizOptionButtonProps = {
   option: QuizOption;
   index: number;
   quizQuestion: QuizQuestion;
+  timer: number;
   quizToken: string;
   selectedNameKo: string | null;
   setSelectedNameKo: (nameKo: string) => void;
@@ -22,6 +23,7 @@ export default function QuizOptionButton({
                                            index,
                                            quizToken,
                                            quizQuestion,
+                                           timer,
                                            selectedNameKo,
                                            setSelectedNameKo,
                                            setScore,
@@ -31,7 +33,7 @@ export default function QuizOptionButton({
     const question = quizQuestion.nameKo
     const selectedOptionNameKo = selectedOption.encryptedNameKo
 
-    return fetch(`/api/quiz-log?quiz-token=${quizToken}&question=${encodeURIComponent(question)}&selected-option=${encodeURIComponent(selectedOptionNameKo)}`, {
+    return fetch(`/api/quiz-log?quiz-token=${quizToken}&question=${encodeURIComponent(question)}&selected-option=${encodeURIComponent(selectedOptionNameKo)}&timer=${timer}`, {
       method: 'POST'
     })
   }
