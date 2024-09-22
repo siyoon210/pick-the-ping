@@ -3,15 +3,14 @@ import {getImageUrlsByTeeniepingIds} from "@/services/teeniepingImageService";
 import {base64Encrypt} from "@/utils/encrypt";
 import {getTeeniepings} from "@/services/teeniepingService";
 import {SupabaseClient} from "@supabase/supabase-js";
-
-const quizzesSize = 10;
+import {QUIZZES_FETCH_SIZE} from "@/constants/quiz_constant";
 
 export async function getQuizzes(supabaseClient: SupabaseClient): Promise<Quiz[]> {
   const teeniepings = await getTeeniepings(supabaseClient)
   const teeniepingImages = await getImageUrlsByTeeniepingIds(supabaseClient);
 
   const quizzes: Quiz[] = [];
-  for (let i = 0; i < quizzesSize; i++) {
+  for (let i = 0; i < QUIZZES_FETCH_SIZE; i++) {
     const randomSelectedTeeniepings = getShuffledArray(teeniepings, 9);
     const randomSelectedTeenieping = getRandomElement(randomSelectedTeeniepings);
 

@@ -12,11 +12,11 @@ export async function insertQuizPublishLog(supabaseClient: SupabaseClient, quizT
     ]);
 
   if (error) {
-    console.error("Failed to insert quiz_publish_log. Error: ", error);
+    console.error("Failed to insert quiz_publish_log. Error: ", JSON.stringify(error));
   }
 }
 
-export async function insertQuizLog(supabaseClient: SupabaseClient, quizToken: string, question: string, selectedOption: string): Promise<void> {
+export async function insertQuizLog(supabaseClient: SupabaseClient, quizToken: string, question: string, selectedOption: string, timer: number): Promise<void> {
   const decryptSelectedOption = base64Decrypt(selectedOption);
   const {error} = await supabaseClient
     .from('quiz_log')
@@ -25,10 +25,11 @@ export async function insertQuizLog(supabaseClient: SupabaseClient, quizToken: s
         quiz_token: quizToken,
         question: question,
         selected_option: decryptSelectedOption,
+        timer: timer,
       }
     ]);
 
   if (error) {
-    console.error(`Failed to insert quiz_log. quizToken:${quizToken} / question:${question} / selectedOption:${decryptSelectedOption} Error: ${error}`);
+    console.error(`Failed to insert quiz_log. quizToken:${quizToken} / question:${question} / selectedOption:${decryptSelectedOption} / timer:${timer} Error: ${JSON.stringify(error)}`);
   }
 }

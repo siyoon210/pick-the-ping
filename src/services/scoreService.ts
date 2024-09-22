@@ -11,7 +11,7 @@ export async function getTotalScore(supabaseClient: SupabaseClient, quizToken: s
   }
 
   if (error) {
-    console.error(`Error fetching quiz_log: ${error} / quiz_token": ${quizToken}`);
+    console.error(`Error fetching quiz_log: ${JSON.stringify(error)} / quiz_token": ${quizToken}`);
     return 0;
   }
 

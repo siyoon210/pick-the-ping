@@ -10,7 +10,7 @@ export async function getRankings(supabaseClient: SupabaseClient, page: number, 
   } = orderByScore ? await selectRankingOrderByScore(supabaseClient, from, to) : await selectRankingOrderByCreatedAt(supabaseClient, from, to);
 
   if (data === null || error) {
-    console.error("No data found from ranking. Error: ", error);
+    console.error("No data found from ranking. Error: ", JSON.stringify(error));
     return [];
   }
   return data.map((row: any) => {
@@ -53,6 +53,6 @@ export async function insertRanking(supabaseClient: SupabaseClient, ranking: Ran
     ]);
 
   if (error) {
-    console.error("Error inserting ranking: ", error);
+    console.error("Error inserting ranking: ", JSON.stringify(error));
   }
 }

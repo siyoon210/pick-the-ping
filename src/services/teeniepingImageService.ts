@@ -3,7 +3,7 @@ import {SupabaseClient} from "@supabase/supabase-js";
 export async function getImageUrlsByTeeniepingIds(supabaseClient: SupabaseClient): Promise<{ [key: number]: string[] }> {
   const {data, error} = await supabaseClient.from("teenieping_image").select('*');
   if (data === null || error) {
-    console.error("No data found from teenieping_image. Error: ", error);
+    console.error("No data found from teenieping_image. Error: ", JSON.stringify(error));
     return [];
   }
   return data.reduce((acc, current) => {
