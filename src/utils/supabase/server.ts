@@ -1,32 +1,13 @@
-import {createServerClient} from '@supabase/ssr'
-import {cookies} from 'next/headers'
+import { createClient } from '@supabase/supabase-js';
 
-export function createSupabaseServerClient() {
-  const cookieStore = cookies()
-
-  // Create a server's supabase client with newly configured cookie,
-  // which could be used to maintain user's session
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+export const createSupabaseServerClient = () => {
+  return createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({name, value, options}) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-            console.error(`쿠키 설정 실패. ${cookiesToSet}`)
-          }
-        },
+      auth: {
+        persistSession: false,  // 세션 유지 안 함 (서버 사이드용)
       },
     }
-  )
-}
+  );
+};

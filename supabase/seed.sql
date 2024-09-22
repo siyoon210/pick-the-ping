@@ -115,13 +115,21 @@ SET row_security = off;
 
 
 --
+-- Data for Name: quiz_log; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: quiz_publish_log; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
 -- Data for Name: ranking; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."ranking" ("id", "score", "name", "message", "created_at") VALUES
-	(1, 11, '푸루', '티니핑 좋아해요', '2024-09-20 14:24:08.548126+00'),
-	(2, 3, '한빛초김예진', NULL, '2024-09-20 14:24:30.247048+00'),
-	(3, 13, '티니핑100', '플로라 하츄핑 최고', '2024-09-20 14:25:36.068395+00');
 
 
 --
@@ -216,6 +224,20 @@ SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 1, false);
 --
 
 SELECT pg_catalog.setval('"pgsodium"."key_key_id_seq"', 1, false);
+
+
+--
+-- Name: quiz_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."quiz_log_id_seq"', 1, false);
+
+
+--
+-- Name: quiz_publish_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."quiz_publish_log_id_seq"', 1, false);
 
 
 --
