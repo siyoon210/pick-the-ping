@@ -1,7 +1,6 @@
-import {createSupabaseServerClient} from '@/utils/supabase/server';
+import {SupabaseClient} from "@supabase/supabase-js";
 
-export async function getImageUrlsByTeeniepingIds(): Promise<{ [key: number]: string[] }> {
-  const supabaseClient = createSupabaseServerClient();
+export async function getImageUrlsByTeeniepingIds(supabaseClient: SupabaseClient): Promise<{ [key: number]: string[] }> {
   const {data, error} = await supabaseClient.from("teenieping_image").select('*');
   if (data === null || error) {
     console.error("No data found from teenieping_image. Error: ", error);

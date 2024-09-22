@@ -1,13 +1,13 @@
-import {createSupabaseServerClient} from '@/utils/supabase/server';
+import {SupabaseClient} from "@supabase/supabase-js";
 
-export async function getRankings(page: number, pageSize: number, orderByScore: boolean): Promise<Ranking[]> {
+export async function getRankings(supabaseClient: SupabaseClient, page: number, pageSize: number, orderByScore: boolean): Promise<Ranking[]> {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
   const {
     data,
     error
-  } = orderByScore ? await selectRankingOrderByScore(from, to) : await selectRankingOrderByCreatedAt(from, to);
+  } = orderByScore ? await selectRankingOrderByScore(supabaseClient, from, to) : await selectRankingOrderByCreatedAt(supabaseClient, from, to);
 
   if (data === null || error) {
     console.error("No data found from ranking. Error: ", error);
@@ -24,8 +24,7 @@ export async function getRankings(page: number, pageSize: number, orderByScore: 
   });
 }
 
-const selectRankingOrderByScore = async (from: number, to: number): Promise<any> => {
-  const supabaseClient = createSupabaseServerClient();
+const selectRankingOrderByScore = async (supabaseClient: SupabaseClient, from: number, to: number): Promise<any> => {
   return supabaseClient
     .from("ranking")
     .select('*')
@@ -33,8 +32,7 @@ const selectRankingOrderByScore = async (from: number, to: number): Promise<any>
     .range(from, to);
 };
 
-const selectRankingOrderByCreatedAt = async (from: number, to: number): Promise<any> => {
-  const supabaseClient = createSupabaseServerClient();
+const selectRankingOrderByCreatedAt = async (supabaseClient: SupabaseClient, from: number, to: number): Promise<any> => {
   return supabaseClient
     .from("ranking")
     .select('*')
@@ -42,10 +40,9 @@ const selectRankingOrderByCreatedAt = async (from: number, to: number): Promise<
     .range(from, to);
 };
 
-export async function insertRanking(ranking: Ranking): Promise<void> {
+export async function insertRanking(supabaseClient: SupabaseClient, ranking: Ranking): Promise<void> {
   console.log("Inserting ranking: ", ranking);
-  const supabaseClient = createSupabaseServerClient();
-  const {data, error} = await supabaseClient
+  const {error} = await supabaseClient
     .from('ranking')
     .insert([
       {

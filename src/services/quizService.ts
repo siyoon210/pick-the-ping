@@ -2,13 +2,16 @@ import {getRandomElement, getShuffledArray} from "@/utils/random";
 import {getImageUrlsByTeeniepingIds} from "@/services/teeniepingImageService";
 import {base64Encrypt} from "@/utils/encrypt";
 import {getTeeniepings} from "@/services/teeniepingService";
+import {SupabaseClient} from "@supabase/supabase-js";
 
-export async function getQuizzes(quizSize = 10): Promise<Quiz[]> {
-  const teeniepings = await getTeeniepings()
-  const teeniepingImages = await getImageUrlsByTeeniepingIds();
+const quizzesSize = 10;
+
+export async function getQuizzes(supabaseClient: SupabaseClient): Promise<Quiz[]> {
+  const teeniepings = await getTeeniepings(supabaseClient)
+  const teeniepingImages = await getImageUrlsByTeeniepingIds(supabaseClient);
 
   const quizzes: Quiz[] = [];
-  for (let i = 0; i < quizSize; i++) {
+  for (let i = 0; i < quizzesSize; i++) {
     const randomSelectedTeeniepings = getShuffledArray(teeniepings, 9);
     const randomSelectedTeenieping = getRandomElement(randomSelectedTeeniepings);
 
