@@ -2,14 +2,25 @@ import {Home, Trophy, Clock} from 'lucide-react'
 import Link from 'next/link'
 import RankingSubmitForm from "@/components/quiz-end/RankingSubmitForm";
 import RankingList from "@/components/ranking/RankingList"
+import {redirect} from 'next/navigation';
+import {getTotalScore} from "@/services/scoreService";
+import {createSupabaseServerClient} from "@/utils/supabase/server";
 
-// todo 점수 암호화
 // todo 점수 검증 (실제로 가능한 점수인지)
 // todo XSS, SQL인젝션
-export default function Page({searchParams}: {
+// todo 최대 글자 제한
+export default async function Page({searchParams}: {
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
-  const score = Number(searchParams.score);
+  const supabaseClient = createSupabaseServerClient();
+
+  const quizToken = searchParams['quiz-token'] as string;
+
+  if (!quizToken) {
+    redirect('/ranking');
+  }
+
+  const totalScore = await getTotalScore(supabaseClient, quizToken);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -23,13 +34,13 @@ export default function Page({searchParams}: {
         <div className="p-4">
           <div className="text-center mb-6">
             <p className="text-3xl font-bold">최종 점수</p>
-            <p className="text-5xl font-bold text-primary mt-2">{score}</p>
+            <p className="text-5xl font-bold text-primary mt-2">{totalScore}</p>
           </div>
 
-          <RankingSubmitForm score={score}/>
+          <RankingSubmitForm score={totalScore}/>
           <RankingList page={1} pageSize={3}/>
         </div>
       </div>
     </div>
-  )
+  );
 }

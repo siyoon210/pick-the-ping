@@ -15,7 +15,7 @@ export default function QuizSection() {
   const [quiz, setQuiz] = useState<Quiz>()
   const [quizToken, setQuizToken] = useState<string>("")
   const router = useRouter();
-  const {timer, setIsTimerPaused} = useTimer(INIT_TIME, () => router.push(`/quiz-end?score=${score}`));
+  const {timer, setIsTimerPaused} = useTimer(INIT_TIME, () => router.push(`/quiz-end?quiz-token=${quizToken}`));
 
   useEffect(() => {
     pauseTimerAndFetchQuizzes();
