@@ -24,8 +24,13 @@ export async function validate(supabaseClient: SupabaseClient, quizToken: string
   const sortedQuizLogs = quizLogs.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
   const sortedQuizPublishLogs = quizPublishLogs.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
-  if (!(logsQuizzesSizeValidation(sortedQuizLogs, sortedQuizPublishLogs))) {
-    console.warn(`[Validation] Logs created_at validation failed for quizToken: ${quizToken}`);
+  if(!(logsQuizzesSizeValidation(sortedQuizLogs, sortedQuizPublishLogs))) {
+    console.warn(`[Validation] QuizLogs size validation failed for quizToken: ${quizToken}`);
+    return false;
+  }
+
+  if (!(logsQuizzesSizeBetweenPublishValidation(sortedQuizLogs, sortedQuizPublishLogs))) {
+    console.warn(`[Validation] QuizLogs size between publish validation failed for quizToken: ${quizToken}`);
     return false;
   }
 
@@ -43,9 +48,16 @@ export async function validate(supabaseClient: SupabaseClient, quizToken: string
 }
 
 /**
+ * 발행한 퀴즈 숫자보다 많은 문제를 풀면 안된다.
+ */
+const logsQuizzesSizeValidation = (sortedQuizLogs: any[], sortedQuizPublishLogs: any[]) => {
+  return sortedQuizLogs.length <= sortedQuizPublishLogs.length * QUIZZES_FETCH_SIZE;
+}
+
+/**
  * 발행시간사이에 퀴즈로그는 QUIZZES_FETCH_SIZE 만큼만 있어야 한다.
  */
-const logsQuizzesSizeValidation = (sortedQuizLogs: any, sortedQuizPublishLogs: any) => {
+const logsQuizzesSizeBetweenPublishValidation = (sortedQuizLogs: any[], sortedQuizPublishLogs: any[]) => {
   for (let i = 0; i < sortedQuizPublishLogs.length - 1; i++) {
     const startPublishLog = new Date(sortedQuizPublishLogs[i].created_at);
     const endPublishLog = new Date(sortedQuizPublishLogs[i + 1].created_at);
@@ -66,7 +78,7 @@ const logsQuizzesSizeValidation = (sortedQuizLogs: any, sortedQuizPublishLogs: a
 /**
  * 다음 로그의 timer 값은 이전 로그의 timer 값보다 작거나 같아야 한다.
  */
-function timerValidate(sortedQuizLogs: any): boolean {
+function timerValidate(sortedQuizLogs: any[]): boolean {
   for (let i = 1; i < sortedQuizLogs.length; i++) {
     const previousLog = sortedQuizLogs[i - 1];
     const currentLog = sortedQuizLogs[i];
@@ -80,19 +92,18 @@ function timerValidate(sortedQuizLogs: any): boolean {
 
 /**
  * created_at 으로 비교하여 timer 검증
+ * create_at 기준으로 1초가 초과하였는데 timer 값이 이전 로그보다 같다면 false
  */
-function timerValidateWithCreatedAt(sortedQuizLogs: any): boolean {
+function timerValidateWithCreatedAt(sortedQuizLogs: any[]): boolean {
   for (let i = 1; i < sortedQuizLogs.length; i++) {
     const previousLog = sortedQuizLogs[i - 1];
     const currentLog = sortedQuizLogs[i];
 
     const previousTime = new Date(previousLog.created_at).getTime();
     const currentTime = new Date(currentLog.created_at).getTime();
-
     const timeDifferenceInMilliseconds = currentTime - previousTime;
-    const timeDifferenceInSeconds = timeDifferenceInMilliseconds / 1000;
 
-    if (previousLog.timer - timeDifferenceInSeconds > currentLog.timer) {
+    if (previousLog.timer == currentLog.timer && timeDifferenceInMilliseconds >= 1000) {
       return false;
     }
   }
