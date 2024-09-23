@@ -1,5 +1,5 @@
 import {SupabaseClient} from "@supabase/supabase-js";
-import {QUIZZES_FETCH_SIZE} from "@/constants/quiz_constant";
+import {QUIZ_LIMIT_TIME_SECONDS, QUIZZES_FETCH_SIZE} from "@/constants/quiz_constant";
 
 export async function validate(supabaseClient: SupabaseClient, quizToken: string) {
   const {data: quizLogs} = await supabaseClient
@@ -24,7 +24,7 @@ export async function validate(supabaseClient: SupabaseClient, quizToken: string
   const sortedQuizLogs = quizLogs.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
   const sortedQuizPublishLogs = quizPublishLogs.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
-  if(!(logsQuizzesSizeValidation(sortedQuizLogs, sortedQuizPublishLogs))) {
+  if (!(logsQuizzesSizeValidation(sortedQuizLogs, sortedQuizPublishLogs))) {
     console.warn(`[Validation] QuizLogs size validation failed for quizToken: ${quizToken}`);
     return false;
   }
@@ -32,6 +32,11 @@ export async function validate(supabaseClient: SupabaseClient, quizToken: string
   if (!(logsQuizzesSizeBetweenPublishValidation(sortedQuizLogs, sortedQuizPublishLogs))) {
     console.warn(`[Validation] QuizLogs size between publish validation failed for quizToken: ${quizToken}`);
     return false;
+  }
+
+  if (!(quizPeriodValidation(sortedQuizLogs, sortedQuizPublishLogs))) {
+    console.warn(`[Validation] Quiz period validation failed for quizToken: ${quizToken}`);
+    // 실제로 오차가 발생할 수 있을것 같아 로그용으로만 참조한다.
   }
 
   if (!(timerValidate(sortedQuizLogs))) {
@@ -81,6 +86,17 @@ const logsQuizzesSizeBetweenPublishValidation = (sortedQuizLogs: any[], sortedQu
 }
 
 /**
+ * 퀴즈 시작시간과 끝시간을 비교하여 QUIZ_LIMIT_TIME_SECONDS 10% 오차 이내로 풀어야 한다.
+ */
+const quizPeriodValidation = (sortedQuizLogs: any[], sortedQuizPublishLogs: any[]) => {
+  const startTime = new Date(sortedQuizPublishLogs[0].created_at).getTime();
+  const endTime = new Date(sortedQuizLogs[sortedQuizLogs.length - 1].created_at).getTime();
+  const timeDifferenceInMilliseconds = endTime - startTime;
+  const timeDifferenceInSeconds = timeDifferenceInMilliseconds / 1000;
+  return timeDifferenceInSeconds <= QUIZ_LIMIT_TIME_SECONDS * 1.1; // 10% 오차 허용
+}
+
+/**
  * timer 값은 0보다 같거나 커야한다.
  */
 function timerValidate(sortedQuizLogs: any[]): boolean {
@@ -109,7 +125,7 @@ function timerSequenceValidate(sortedQuizLogs: any[]): boolean {
 
 /**
  * created_at 으로 비교하여 timer 검증
- * create_at 기준으로 1초가 초과하였는데 timer 값이 이전 로그보다 같다면 false
+ * create_at 기준으로 1초가 초과하였는데 timer 값이 이전 로그와 같다면 false
  */
 function timerValidateWithCreatedAt(sortedQuizLogs: any[]): boolean {
   for (let i = 1; i < sortedQuizLogs.length; i++) {
