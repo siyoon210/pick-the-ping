@@ -36,6 +36,11 @@ export async function validate(supabaseClient: SupabaseClient, quizToken: string
 
   if (!(timerValidate(sortedQuizLogs))) {
     console.warn(`[Validation] Timer validation failed for quizToken: ${quizToken}`);
+    // 실제로 오차가 발생할 수 있을것 같아 로그용으로만 참조한다.
+  }
+
+  if (!(timerSequenceValidate(sortedQuizLogs))) {
+    console.warn(`[Validation] Timer sequence validation failed for quizToken: ${quizToken}`);
     return false;
   }
 
@@ -76,9 +81,21 @@ const logsQuizzesSizeBetweenPublishValidation = (sortedQuizLogs: any[], sortedQu
 }
 
 /**
- * 다음 로그의 timer 값은 이전 로그의 timer 값보다 작거나 같아야 한다.
+ * timer 값은 0보다 같거나 커야한다.
  */
 function timerValidate(sortedQuizLogs: any[]): boolean {
+  for (let i = 0; i < sortedQuizLogs.length; i++) {
+    if (sortedQuizLogs[i].timer < 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * 다음 로그의 timer 값은 이전 로그의 timer 값보다 작거나 같아야 한다.
+ */
+function timerSequenceValidate(sortedQuizLogs: any[]): boolean {
   for (let i = 1; i < sortedQuizLogs.length; i++) {
     const previousLog = sortedQuizLogs[i - 1];
     const currentLog = sortedQuizLogs[i];
