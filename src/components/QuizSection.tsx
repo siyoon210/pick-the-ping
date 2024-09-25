@@ -15,7 +15,10 @@ export default function QuizSection() {
   const [quiz, setQuiz] = useState<Quiz>()
   const [quizToken, setQuizToken] = useState<string>("")
   const router = useRouter();
-  const {timer, setIsTimerPaused} = useTimer(QUIZ_LIMIT_TIME_SECONDS, () => router.push(`/quiz-end?quiz-token=${quizToken}`));
+  const {
+    timer,
+    setIsTimerPaused
+  } = useTimer(QUIZ_LIMIT_TIME_SECONDS, () => router.push(`/quiz-end?quiz-token=${quizToken}`));
 
   useEffect(() => {
     pauseTimerAndFetchQuizzes();
@@ -92,8 +95,8 @@ export default function QuizSection() {
             />
           ))
         ) : (
-          Array.from({ length: 9 }).map((_, index) => (
-            <QuizOptionButtonLoading />
+          Array.from({length: 9}).map((_, index) => (
+            <QuizOptionButtonLoading index={index}/>
           ))
         )}
       </div>

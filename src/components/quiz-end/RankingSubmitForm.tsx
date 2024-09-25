@@ -29,7 +29,7 @@ export default function RankingSubmitForm({quizToken}: ResultSubmitFormProps) {
         name,
         message,
       }),
-    }).then((res) => {
+    }).then(() => {
       console.log('submit success')
     }).catch((error) => {
       console.error('Error:', error)
