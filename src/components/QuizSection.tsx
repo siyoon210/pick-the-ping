@@ -15,28 +15,24 @@ export default function QuizSection() {
   const [quiz, setQuiz] = useState<Quiz>()
   const [quizToken, setQuizToken] = useState<string>("")
   const router = useRouter();
-  const {
-    timer,
-    setIsTimerPaused
-  } = useTimer(QUIZ_LIMIT_TIME_SECONDS, () => router.push(`/quiz-end?quiz-token=${quizToken}`));
+  const {timer, resumeTimer} = useTimer(QUIZ_LIMIT_TIME_SECONDS, () => router.push(`/quiz-end?quiz-token=${quizToken}`));
 
   useEffect(() => {
-    pauseTimerAndFetchQuizzes();
+    fetchQuizzes();
   }, []);
 
-  const pauseTimerAndFetchQuizzes = () => {
-    setIsTimerPaused(true);
+  const fetchQuizzes = () => {
     console.log('Fetching quizzes.');
     fetch(`/api/quiz?quiz-token=${quizToken}`)
       .then(response => response.json())
       .then(responseQuizzes => {
         setQuizToken(responseQuizzes.quizToken);
         initQuiz(responseQuizzes.quizzes);
-        setIsTimerPaused(false);
+        resumeTimer();
       })
       .catch(error => {
         console.error('Error fetching quizzes:', error);
-        pauseTimerAndFetchQuizzes();
+        fetchQuizzes();
       });
   };
 
@@ -50,7 +46,7 @@ export default function QuizSection() {
     if (quizzes.length > 0) {
       initQuiz(quizzes)
     } else {
-      pauseTimerAndFetchQuizzes()
+      fetchQuizzes()
     }
   }
 
@@ -59,7 +55,7 @@ export default function QuizSection() {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           <Clock className="h-5 w-5 mr-2 text-primary"/>
-          <span className="font-medium">{timer}초</span>
+          <span className="font-medium">{timer.toFixed(0)}초</span>
         </div>
         <div className="flex items-center">
           <Award className="h-5 w-5 mr-2 text-primary"/>
