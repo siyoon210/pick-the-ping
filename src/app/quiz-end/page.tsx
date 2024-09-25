@@ -1,4 +1,4 @@
-import {Home, Trophy, Clock} from 'lucide-react'
+import {Home} from 'lucide-react'
 import Link from 'next/link'
 import RankingSubmitForm from "@/components/quiz-end/RankingSubmitForm";
 import RankingList from "@/components/ranking/RankingList"
@@ -6,6 +6,7 @@ import {redirect} from 'next/navigation';
 import {getTotalScore} from "@/services/scoreService";
 import {createSupabaseServerClient} from "@/utils/supabase/server";
 import {validate} from "@/services/quizValidationService";
+import {getRankingByQuizToken} from "@/services/rankingService";
 
 export default async function Page({searchParams}: {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -19,6 +20,11 @@ export default async function Page({searchParams}: {
 
   const totalScore = await getTotalScore(supabaseClient, quizToken);
   if (totalScore === 0) {
+    redirect('/ranking');
+  }
+
+  const savedRanking = await getRankingByQuizToken(supabaseClient, quizToken);
+  if (savedRanking) {
     redirect('/ranking');
   }
 

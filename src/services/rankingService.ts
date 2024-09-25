@@ -65,3 +65,22 @@ export async function insertRanking(supabaseClient: SupabaseClient, totalScore: 
     console.error("Error inserting ranking: ", JSON.stringify(error));
   }
 }
+
+export async function getRankingByQuizToken(supabaseClient: SupabaseClient, quizToken: string): Promise<Ranking | null> {
+  const {data} = await supabaseClient
+    .from('ranking')
+    .select('*')
+    .eq('quiz_token', quizToken)
+
+  if (data === null || data.length === 0) {
+    return null
+  }
+
+  return {
+    id: data[0].id,
+    score: data[0].score,
+    name: data[0].name,
+    message: data[0].message,
+    createdAt: data[0].created_at
+  }
+}

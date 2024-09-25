@@ -32,6 +32,10 @@ export default function RankingList({page, pageSize}: RankingListProps) {
       });
   }, [showScoreRanking]);
 
+  if(rankings.length === 0) {
+    return <></>
+  }
+
   return (
     <div>
       <div className="flex justify-between mb-4">

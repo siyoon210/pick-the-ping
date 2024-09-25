@@ -92,7 +92,7 @@ export default function QuizSection() {
           ))
         ) : (
           Array.from({length: 9}).map((_, index) => (
-            <QuizOptionButtonLoading index={index}/>
+            <QuizOptionButtonLoading key={index}/>
           ))
         )}
       </div>
