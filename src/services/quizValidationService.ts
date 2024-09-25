@@ -49,11 +49,6 @@ export async function validate(supabaseClient: SupabaseClient, quizToken: string
     return false;
   }
 
-  if (!(timerValidateWithCreatedAt(sortedQuizLogs))) {
-    console.warn(`[Validation] Timer validation With CreatedAt failed for quizToken: ${quizToken}`);
-    // 실제로 오차가 발생할 수 있을것 같아 로그용으로만 참조한다.
-  }
-
   return true;
 }
 
@@ -109,34 +104,14 @@ function timerValidate(sortedQuizLogs: any[]): boolean {
 }
 
 /**
- * 다음 로그의 timer 값은 이전 로그의 timer 값보다 작거나 같아야 한다.
+ * 다음 로그의 timer 값은 이전 로그의 timer 값보다 작아야 한다.
  */
 function timerSequenceValidate(sortedQuizLogs: any[]): boolean {
   for (let i = 1; i < sortedQuizLogs.length; i++) {
     const previousLog = sortedQuizLogs[i - 1];
     const currentLog = sortedQuizLogs[i];
 
-    if (currentLog.timer > previousLog.timer) {
-      return false;
-    }
-  }
-  return true;
-}
-
-/**
- * created_at 으로 비교하여 timer 검증
- * create_at 기준으로 1초가 초과하였는데 timer 값이 이전 로그와 같다면 false
- */
-function timerValidateWithCreatedAt(sortedQuizLogs: any[]): boolean {
-  for (let i = 1; i < sortedQuizLogs.length; i++) {
-    const previousLog = sortedQuizLogs[i - 1];
-    const currentLog = sortedQuizLogs[i];
-
-    const previousTime = new Date(previousLog.created_at).getTime();
-    const currentTime = new Date(currentLog.created_at).getTime();
-    const timeDifferenceInMilliseconds = currentTime - previousTime;
-
-    if (previousLog.timer == currentLog.timer && timeDifferenceInMilliseconds >= 1000) {
+    if (currentLog.timer >= previousLog.timer) {
       return false;
     }
   }
