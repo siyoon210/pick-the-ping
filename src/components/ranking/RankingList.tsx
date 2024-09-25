@@ -17,7 +17,7 @@ export default function RankingList({page, pageSize}: RankingListProps) {
   const fetchRankings = async (): Promise<Ranking[]> => {
     try {
       console.log('Fetching rankings.');
-      const response = await fetch(`/api/ranking?page=${page}&pageSize=${pageSize}&orderByScore=${showScoreRanking}`);
+      const response = await fetch(`/api/ranking?page=${page}&page-size=${pageSize}&order-by-score=${showScoreRanking}`);
       return await response.json();
     } catch (error) {
       console.error('Error fetching rankings:', error);

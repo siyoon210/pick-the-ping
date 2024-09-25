@@ -23,9 +23,9 @@ export async function GET(request: Request): Promise<NextResponse<Ranking[]>> {
   const supabaseClient = createSupabaseServerClient();
   const {searchParams} = new URL(request.url);
   const page = Number(searchParams.get('page'));
-  const pageSize = Number(searchParams.get('pageSize'));
-  const orderByScore = searchParams.get('orderByScore') === 'true';
-  console.log(`requestUrl: ${request.url}, page: ${page}, pageSize: ${pageSize}, orderByScore: ${orderByScore}`);
+  const pageSize = Number(searchParams.get('page-size'));
+  const orderByScore = searchParams.get('order-by-score') === 'true';
+  console.log(`requestUrl: ${request.url}, page: ${page}, page-size: ${pageSize}, order-by-score: ${orderByScore}`);
 
   const rankings = await getRankings(supabaseClient, page, pageSize, orderByScore);
   console.log('rankings:', rankings)
