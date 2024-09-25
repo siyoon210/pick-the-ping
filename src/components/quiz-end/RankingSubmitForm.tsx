@@ -5,10 +5,10 @@ import {useRouter} from 'next/navigation';
 import {MESSAGE_INPUT_LENGTH, NAME_INPUT_LENGTH} from "@/constants/ranking_constant";
 
 type ResultSubmitFormProps = {
-  score: number;
+  quizToken: string;
 };
 
-export default function RankingSubmitForm({score}: ResultSubmitFormProps) {
+export default function RankingSubmitForm({quizToken}: ResultSubmitFormProps) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function RankingSubmitForm({score}: ResultSubmitFormProps) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        score,
+        quizToken,
         name,
         message,
       }),
@@ -34,7 +34,7 @@ export default function RankingSubmitForm({score}: ResultSubmitFormProps) {
     }).catch((error) => {
       console.error('Error:', error)
     }).finally(() => {
-      router.push('/')
+      router.push('/ranking')
     })
   };
 

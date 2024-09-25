@@ -18,6 +18,9 @@ export default async function Page({searchParams}: {
   }
 
   const totalScore = await getTotalScore(supabaseClient, quizToken);
+  if (totalScore === 0) {
+    redirect('/ranking');
+  }
 
   const isValidQuiz = await validate(supabaseClient, quizToken);
   if (!isValidQuiz) {
@@ -39,7 +42,7 @@ export default async function Page({searchParams}: {
             <p className="text-5xl font-bold text-primary mt-2">{totalScore}</p>
           </div>
 
-          <RankingSubmitForm score={totalScore}/>
+          <RankingSubmitForm quizToken={quizToken}/>
           <RankingList page={1} pageSize={3}/>
         </div>
       </div>
