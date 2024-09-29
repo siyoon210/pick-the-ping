@@ -111,7 +111,7 @@ function timerSequenceValidate(sortedQuizLogs: any[]): boolean {
     const previousLog = sortedQuizLogs[i - 1];
     const currentLog = sortedQuizLogs[i];
 
-    if (currentLog.timer >= previousLog.timer) {
+    if (currentLog.timer > previousLog.timer) {
       return false;
     }
   }
