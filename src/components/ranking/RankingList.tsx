@@ -1,23 +1,25 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {Clock, Trophy} from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {ChevronLeft, ChevronRight, Clock, Trophy} from "lucide-react";
 
 type RankingListProps = {
-  page: number;
+  initialRankings: Ranking[];
+  initialPage: number;
+  initialOrderByScore: boolean;
   pageSize: number;
 };
 
 // todo 로딩
-// todo 페이징
-export default function RankingList({page, pageSize}: RankingListProps) {
-  const [showScoreRanking, setShowScoreRanking] = useState(false)
-  const [rankings, setRankings] = useState<Ranking[]>([])
+export default function RankingList({initialRankings, initialPage, pageSize, initialOrderByScore}: RankingListProps) {
+  const [currentPage, setCurrentPage] = useState(initialPage)
+  const [orderByScore, setOrderByScore] = useState(initialOrderByScore)
+  const [rankings, setRankings] = useState<Ranking[]>(initialRankings)
 
-  const fetchRankings = async (): Promise<Ranking[]> => {
+  const fetchRankings = async (page: number): Promise<Ranking[]> => {
     try {
       console.log('Fetching rankings.');
-      const response = await fetch(`/api/ranking?page=${page}&page-size=${pageSize}&order-by-score=${showScoreRanking}`);
+      const response = await fetch(`/api/ranking?page=${page}&page-size=${pageSize}&order-by-score=${orderByScore}`);
       return await response.json();
     } catch (error) {
       console.error('Error fetching rankings:', error);
@@ -26,30 +28,52 @@ export default function RankingList({page, pageSize}: RankingListProps) {
   };
 
   useEffect(() => {
-    fetchRankings()
+    setCurrentPage(() => {
+      updateRankings(1);
+      return 1;
+    });
+  }, [orderByScore]);
+
+  const updateRankings = async (currentPage: number) => {
+    fetchRankings(currentPage)
       .then(rankings => {
         setRankings(rankings);
       });
-  }, [showScoreRanking]);
+  }
 
-  if(rankings.length === 0) {
+  const prevRankingPage = async () => {
+    setCurrentPage(prevPage => {
+      const newPage = prevPage - 1;
+      updateRankings(newPage);
+      return newPage;
+    });
+  }
+
+  const nextRankingPage = async () => {
+    setCurrentPage(prevPage => {
+      const newPage = prevPage + 1;
+      updateRankings(newPage);
+      return newPage;
+    });
+  }
+  if (rankings.length === 0) {
     return <></>
   }
 
   return (
     <div>
       <div className="flex justify-between mb-4">
-        <h2 className="text-xl font-semibold">{showScoreRanking ? '점수순' : '최신순'}</h2>
+        <h2 className="text-xl font-semibold">{orderByScore ? '점수순' : '최신순'}</h2>
         <div className="flex space-x-2">
           <button
-            onClick={() => setShowScoreRanking(true)}
-            className={`px-3 py-1 rounded-md ${showScoreRanking ? 'bg-black text-white' : 'bg-gray-200'}`}
+            onClick={() => setOrderByScore(true)}
+            className={`px-3 py-1 rounded-md ${orderByScore ? 'bg-black text-white' : 'bg-gray-200'}`}
           >
             <Trophy className="h-4 w-4"/>
           </button>
           <button
-            onClick={() => setShowScoreRanking(false)}
-            className={`px-3 py-1 rounded-md ${!showScoreRanking ? 'bg-black text-white' : 'bg-gray-200'}`}
+            onClick={() => setOrderByScore(false)}
+            className={`px-3 py-1 rounded-md ${!orderByScore ? 'bg-black text-white' : 'bg-gray-200'}`}
           >
             <Clock className="h-4 w-4"/>
           </button>
@@ -66,6 +90,26 @@ export default function RankingList({page, pageSize}: RankingListProps) {
           </li>
         ))}
       </ul>
+      <div className="mt-6 flex justify-center items-center space-x-4">
+        <button
+          onClick={() => prevRankingPage()}
+          disabled={currentPage === 1}
+          className="p-2 rounded-full bg-gray-200 disabled:opacity-50"
+          aria-label="이전 페이지"
+        >
+          <ChevronLeft className="h-5 w-5"/>
+        </button>
+        <span className="text-sm">
+              페이지 {currentPage}
+            </span>
+        <button
+          onClick={() => nextRankingPage()}
+          className="p-2 rounded-full bg-gray-200 disabled:opacity-50"
+          aria-label="다음 페이지"
+        >
+          <ChevronRight className="h-5 w-5"/>
+        </button>
+      </div>
     </div>
   )
 }

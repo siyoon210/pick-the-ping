@@ -2,6 +2,7 @@ import {NextResponse} from 'next/server';
 import {getRankings, insertRanking} from "@/services/rankingService";
 import {createSupabaseServerClient} from "@/utils/supabase/server";
 import {getTotalScore} from "@/services/scoreService";
+import {RANKING_PAGE_SIZE} from "@/constants/ranking_constant";
 
 export async function POST(request: Request) {
   const supabaseClient = createSupabaseServerClient();
@@ -23,7 +24,8 @@ export async function GET(request: Request): Promise<NextResponse<Ranking[]>> {
   const supabaseClient = createSupabaseServerClient();
   const {searchParams} = new URL(request.url);
   const page = Number(searchParams.get('page'));
-  const pageSize = Number(searchParams.get('page-size'));
+  const requestedPageSize = Number(searchParams.get('page-size'));
+  const pageSize = requestedPageSize > RANKING_PAGE_SIZE ? RANKING_PAGE_SIZE : requestedPageSize;
   const orderByScore = searchParams.get('order-by-score') === 'true';
   console.log(`requestUrl: ${request.url}, page: ${page}, page-size: ${pageSize}, order-by-score: ${orderByScore}`);
 

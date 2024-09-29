@@ -1,8 +1,6 @@
 import {NextResponse} from 'next/server';
-import {getQuizzes} from "@/services/quizService";
 import {createSupabaseServerClient} from "@/utils/supabase/server";
-import {generateRandomToken} from "@/utils/token";
-import {insertQuizLog, insertQuizPublishLog} from "@/services/quizLogService";
+import {insertQuizLog} from "@/services/quizLogService";
 
 export async function POST(request: Request) {
   const supabaseClient = createSupabaseServerClient();
