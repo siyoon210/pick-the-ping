@@ -18,6 +18,7 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
   const [rankings, setRankings] = useState<Ranking[]>(initialRankings)
   const [loading, setLoading] = useState(false)
   const [isInitialRender, setIsInitialRender] = useState(true) // 첫페이지 그릴때는 SSR로 수행
+  const [nextPageAvailable, setNextPageAvailable] = useState(true)
 
   const fetchRankings = async (page: number): Promise<Ranking[]> => {
     try {
@@ -42,28 +43,28 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
     });
   }, [orderByScore]);
 
-  const updateRankings = async (currentPage: number) => {
+  const updateRankings = async (newPage: number) => {
     setLoading(true);
-    Promise.all([fetchRankings(currentPage), timeoutPromise(RANKING_LOADING_MIN_MS)]).then(([rankings]) => {
-      setRankings(rankings);
+    Promise.all([fetchRankings(newPage), timeoutPromise(RANKING_LOADING_MIN_MS)]).then(([rankings]) => {
+      if (rankings.length > 0) {
+        setRankings(rankings);
+        setNextPageAvailable(true)
+        setCurrentPage(newPage)
+      } else {
+        setNextPageAvailable(false)
+      }
       setLoading(false);
     });
   }
 
   const prevRankingPage = async () => {
-    setCurrentPage(prevPage => {
-      const newPage = prevPage - 1;
-      updateRankings(newPage);
-      return newPage;
-    });
+    const newPage = currentPage - 1;
+    updateRankings(newPage);
   }
 
   const nextRankingPage = async () => {
-    setCurrentPage(prevPage => {
-      const newPage = prevPage + 1;
-      updateRankings(newPage);
-      return newPage;
-    });
+    const newPage = currentPage + 1;
+    updateRankings(newPage);
   }
 
   if (loading) {
@@ -123,6 +124,7 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
             </span>
         <button
           onClick={() => nextRankingPage()}
+          disabled={!nextPageAvailable}
           className="p-2 rounded-full bg-gray-200 disabled:opacity-50"
           aria-label="다음 페이지"
         >

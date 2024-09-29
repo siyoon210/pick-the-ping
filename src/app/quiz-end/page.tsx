@@ -9,6 +9,8 @@ import {validate} from "@/services/quizValidationService";
 import {getRankingByQuizToken, getRankings} from "@/services/rankingService";
 import {RANKING_PAGE_SIZE_UNDER_SUBMIT_FORM} from "@/constants/ranking_constant";
 
+export const revalidate = 0;
+
 export default async function Page({searchParams}: {
   searchParams: { [key: string]: string | string[] | undefined }
 }) {

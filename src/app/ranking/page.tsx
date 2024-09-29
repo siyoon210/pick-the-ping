@@ -1,9 +1,11 @@
-import {Home} from 'lucide-react'
-import Link from 'next/link'
+import {Home} from 'lucide-react';
+import Link from 'next/link';
 import RankingList from "@/components/ranking/RankingList";
 import {getRankings} from "@/services/rankingService";
 import {createSupabaseServerClient} from "@/utils/supabase/server";
 import {RANKING_PAGE_SIZE} from "@/constants/ranking_constant";
+
+export const revalidate = 0;
 
 export default async function Page() {
   const supabaseClient = createSupabaseServerClient();
