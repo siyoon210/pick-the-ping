@@ -2,6 +2,8 @@
 
 import React, {useEffect, useState} from "react";
 import {ChevronLeft, ChevronRight, Clock, Trophy} from "lucide-react";
+import {timeoutPromise} from "@/utils/timeout";
+import {RANKING_LOADING_MIN_MS} from "@/constants/ranking_constant";
 
 type RankingListProps = {
   initialRankings: Ranking[];
@@ -10,11 +12,12 @@ type RankingListProps = {
   pageSize: number;
 };
 
-// todo 로딩
 export default function RankingList({initialRankings, initialPage, pageSize, initialOrderByScore}: RankingListProps) {
   const [currentPage, setCurrentPage] = useState(initialPage)
   const [orderByScore, setOrderByScore] = useState(initialOrderByScore)
   const [rankings, setRankings] = useState<Ranking[]>(initialRankings)
+  const [loading, setLoading] = useState(false)
+  const [isInitialRender, setIsInitialRender] = useState(true) // 첫페이지 그릴때는 SSR로 수행
 
   const fetchRankings = async (page: number): Promise<Ranking[]> => {
     try {
@@ -28,6 +31,11 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
   };
 
   useEffect(() => {
+    if (isInitialRender) {
+      setIsInitialRender(false);
+      return;
+    }
+
     setCurrentPage(() => {
       updateRankings(1);
       return 1;
@@ -35,10 +43,11 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
   }, [orderByScore]);
 
   const updateRankings = async (currentPage: number) => {
-    fetchRankings(currentPage)
-      .then(rankings => {
-        setRankings(rankings);
-      });
+    setLoading(true);
+    Promise.all([fetchRankings(currentPage), timeoutPromise(RANKING_LOADING_MIN_MS)]).then(([rankings]) => {
+      setRankings(rankings);
+      setLoading(false);
+    });
   }
 
   const prevRankingPage = async () => {
@@ -56,6 +65,16 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
       return newPage;
     });
   }
+
+  if (loading) {
+    return (
+      <div className="text-center py-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-400 mx-auto"></div>
+        <p className="mt-4 text-gray-600">불러오는 중...</p>
+      </div>
+    )
+  }
+
   if (rankings.length === 0) {
     return <></>
   }
