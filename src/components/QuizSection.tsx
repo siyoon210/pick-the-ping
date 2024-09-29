@@ -8,6 +8,13 @@ import {useTimer} from "@/hooks/useTimer";
 import {QUIZ_LIMIT_TIME_SECONDS} from "@/constants/quiz_constant";
 import QuizOptionButtonLoading from "@/components/QuizOptionButtonLoading";
 
+const prefetchImages = (urls: string[]) => {
+  urls.forEach(url => {
+    const img = new Image();
+    img.src = url;
+  });
+};
+
 export default function QuizSection() {
   const [score, setScore] = useState(0)
   const [selectedNameKo, setSelectedNameKo] = useState<string | null>(null)
@@ -18,6 +25,8 @@ export default function QuizSection() {
   const {timer, resumeTimer} = useTimer(QUIZ_LIMIT_TIME_SECONDS, () => router.push(`/quiz-end?quiz-token=${quizToken}`));
 
   useEffect(() => {
+    const imageUrls = Array.from({ length: 86 }, (_, i) => `/img/teenieping/${i + 1}.webp`);
+    prefetchImages(imageUrls);
     fetchQuizzes();
   }, []);
 
