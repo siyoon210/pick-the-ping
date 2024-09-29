@@ -154,7 +154,10 @@ INSERT INTO "public"."teenieping" ("id", "name_ko", "name_en", "created_at") VAL
 	(15, '샤샤핑', 'Shashaping', '2024-09-19 12:33:47.105476+00'),
 	(16, '빛나핑', 'Shimmerping', '2024-09-19 12:33:47.105476+00'),
 	(17, '초롱핑', 'Sparkleping', '2024-09-19 12:33:47.105476+00'),
-	(18, '반짝핑', 'Twinkleping', '2024-09-19 12:33:47.105476+00');
+	(18, '반짝핑', 'Twinkleping', '2024-09-19 12:33:47.105476+00'),
+	(19, '키키핑', 'Kikiping', '2024-09-29 10:03:44.833391+00'),
+	(20, '아잉핑', 'Charmping', '2024-09-29 10:04:08.870079+00'),
+	(21, '부끄핑', 'Shyping', '2024-09-29 10:04:29.563875+00');
 
 
 --
@@ -179,7 +182,10 @@ INSERT INTO "public"."teenieping_image" ("id", "teenieping_id", "image_url", "cr
 	(15, 15, '/img/teenieping/15.webp', '2024-09-20 01:28:39.881857+00'),
 	(18, 18, '/img/teenieping/18.webp', '2024-09-20 01:28:39.881857+00'),
 	(17, 17, '/img/teenieping/17.webp', '2024-09-20 01:28:39.881857+00'),
-	(16, 16, '/img/teenieping/16.webp', '2024-09-20 01:28:39.881857+00');
+	(16, 16, '/img/teenieping/16.webp', '2024-09-20 01:28:39.881857+00'),
+	(19, 19, '/img/teenieping/19.webp', '2024-09-29 10:05:40.372291+00'),
+	(20, 20, '/img/teenieping/20.webp', '2024-09-29 10:05:40.372291+00'),
+	(21, 21, '/img/teenieping/21.webp', '2024-09-29 10:05:40.372291+00');
 
 
 --
@@ -251,14 +257,14 @@ SELECT pg_catalog.setval('"public"."ranking_id_seq"', 3, true);
 -- Name: teenieping_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."teenieping_id_seq"', 18, true);
+SELECT pg_catalog.setval('"public"."teenieping_id_seq"', 21, true);
 
 
 --
 -- Name: teenieping_image_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."teenieping_image_id_seq"', 18, true);
+SELECT pg_catalog.setval('"public"."teenieping_image_id_seq"', 21, true);
 
 
 --
