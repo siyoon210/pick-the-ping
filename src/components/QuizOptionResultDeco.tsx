@@ -13,6 +13,7 @@ export default function QuizOptionResultDeco({
                                                quizQuestion,
                                              }: QuizOptionResultDecoProps) {
   const optionNameKo = base64Decrypt(option.encryptedNameKo);
+  const optionNameEn = base64Decrypt(option.encryptedNameEn);
   const isCorrectAnswer = optionNameKo === quizQuestion.nameKo;
   const isWrongAnswer = selectedNameKo === optionNameKo && !isCorrectAnswer;
 
@@ -32,7 +33,8 @@ export default function QuizOptionResultDeco({
         <>
           <div
             className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-sm font-medium">
-            {optionNameKo}
+            {optionNameKo}<br/>
+            {optionNameEn}
           </div>
           <XCircle className="absolute top-2 right-2 h-6 w-6 text-red-500"/>
         </>
