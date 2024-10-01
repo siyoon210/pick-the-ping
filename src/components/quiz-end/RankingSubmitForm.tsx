@@ -1,7 +1,8 @@
 "use client";
 
-import {useState} from "react";
+import React, {useState} from "react";
 import {useRouter} from 'next/navigation';
+import {Loader2} from 'lucide-react'
 import {MESSAGE_INPUT_LENGTH, NAME_INPUT_LENGTH} from "@/constants/ranking_constant";
 
 type ResultSubmitFormProps = {
@@ -11,10 +12,12 @@ type ResultSubmitFormProps = {
 export default function RankingSubmitForm({quizToken}: ResultSubmitFormProps) {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setIsSubmitting(true)
     sendPostRequest()
   }
 
@@ -34,6 +37,7 @@ export default function RankingSubmitForm({quizToken}: ResultSubmitFormProps) {
     }).catch((error) => {
       console.error('Error:', error)
     }).finally(() => {
+      setIsSubmitting(false)
       router.push('/ranking')
     })
   };
@@ -70,8 +74,15 @@ export default function RankingSubmitForm({quizToken}: ResultSubmitFormProps) {
       <button
         type="submit"
         className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-primary/80 transition-colors"
+        disabled={isSubmitting}
       >
-        등록하기
+        {isSubmitting ? (
+          <div className="flex justify-center items-center h-6">
+            <Loader2 className="animate-spin h-5 w-5"/>
+          </div>
+        ) : (
+          '등록하기'
+        )}
       </button>
     </form>)
 }
