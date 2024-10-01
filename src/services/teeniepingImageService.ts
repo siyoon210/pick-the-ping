@@ -1,7 +1,7 @@
 import {SupabaseClient} from "@supabase/supabase-js";
 
 export async function getImageUrlsByTeeniepingIds(supabaseClient: SupabaseClient): Promise<{ [key: number]: string[] }> {
-  const {data, error} = await supabaseClient.from("teenieping_image").select('*');
+  const {data, error} = await supabaseClient.from("teenieping_image").select('*').limit(500);
   if (data === null || error) {
     console.error("No data found from teenieping_image. Error: ", JSON.stringify(error));
     return [];
