@@ -13,6 +13,7 @@ type QuizOptionButtonProps = {
   setSelectedNameKo: (nameKo: string) => void;
   setScore: (prevScore: (prev: number) => number) => void;
   setNextQuiz: () => void;
+  loadedImages: { [key: string]: HTMLImageElement };
 };
 
 const CORRECT_TIMEOUT_MS = 250
@@ -28,6 +29,7 @@ export default function QuizOptionButton({
                                            setSelectedNameKo,
                                            setScore,
                                            setNextQuiz,
+                                           loadedImages,
                                          }: QuizOptionButtonProps) {
   const postQuizLog = (selectedOption: QuizOption) => {
     const question = quizQuestion.nameKo
@@ -63,14 +65,22 @@ export default function QuizOptionButton({
       disabled={selectedNameKo !== null}
       onClick={selectImage(option)}
     >
-      <Image
-        src={`${option.imageUrl}`}
-        alt={`Quiz image ${index + 1}`}
-        width={100}
-        height={100}
-        className="w-full h-full object-cover"
-        priority
-      />
+      {loadedImages[option.imageUrl] ? (
+        <img
+          src={loadedImages[option.imageUrl].src}
+          alt={`Quiz image ${index + 1}`}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <Image
+          src={option.imageUrl}
+          alt={`Quiz image ${index + 1}`}
+          width={100}
+          height={100}
+          className="w-full h-full object-cover"
+          priority
+        />
+      )}
       <QuizOptionResultDeco
         option={option}
         selectedNameKo={selectedNameKo}
