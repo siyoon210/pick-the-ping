@@ -25,7 +25,7 @@ export default function QuizSection() {
   const {timer, resumeTimer} = useTimer(QUIZ_LIMIT_TIME_SECONDS, () => router.push(`/quiz-end?quiz-token=${quizToken}`));
 
   useEffect(() => {
-    const imageUrls = Array.from({ length: 86 }, (_, i) => `/img/teenieping/${i + 1}.webp`);
+    const imageUrls = Array.from({ length: 108 }, (_, i) => `/img/teenieping/${i + 1}.webp`);
     prefetchImages(imageUrls);
     fetchQuizzes();
   }, []);
