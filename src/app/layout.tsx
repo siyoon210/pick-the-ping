@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description: "캐치! 티니핑 이미지 퀴즈",
     images: [
       {
-        url: "/og-image.webp",
+        url: "/img/og-image.webp",
         alt: "캐치! 티니핑 이미지 퀴즈",
       },
     ],
