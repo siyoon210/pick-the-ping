@@ -5,7 +5,7 @@ import QuizSection from "@/components/QuizSection";
 export default async function Page() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="w-full max-w-md bg-white shadow-md overflow-hidden min-h-screen rounded-none sm:min-h-0 sm:rounded-lg">
         <div className="p-4 bg-black text-white flex justify-between items-center">
           <h1 className="text-xl font-semibold">Pick the Teenieping</h1>
           <Link href="/" className="text-white hover:text-white/80">

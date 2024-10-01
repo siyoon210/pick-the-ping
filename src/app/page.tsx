@@ -4,7 +4,7 @@ import { Play, Trophy } from 'lucide-react'
 export default async function Page() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="w-full max-w-md bg-white shadow-md rounded-lg overflow-hidden m-4">
         <div className="p-6 bg-black text-white text-center">
           <h1 className="text-3xl font-bold">Pick the Teenieping</h1>
         </div>
