@@ -31,7 +31,6 @@ export default function QuizSection() {
   }, []);
 
   const fetchQuizzes = () => {
-    console.log('Fetching quizzes.');
     fetch(`/api/quiz?quiz-token=${quizToken}`)
       .then(response => response.json())
       .then(responseQuizzes => {
