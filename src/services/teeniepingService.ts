@@ -1,7 +1,7 @@
 import {SupabaseClient} from "@supabase/supabase-js";
 
 export async function getTeeniepings(supabaseClient: SupabaseClient): Promise<Teenieping[]> {
-  const {data, error} = await supabaseClient.from("teenieping").select('*').limit(500);
+  const {data, error} = await supabaseClient.from("teenieping").select('*').limit(400);
   if (data === null || error) {
     console.error("No data found from teenieping. Error: ", JSON.stringify(error));
     return [];
