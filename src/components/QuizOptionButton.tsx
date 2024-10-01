@@ -17,7 +17,7 @@ type QuizOptionButtonProps = {
 };
 
 const CORRECT_TIMEOUT_MS = 250
-const INCORRECT_TIMEOUT_MS = 1800
+const INCORRECT_TIMEOUT_MS = 2300
 
 export default function QuizOptionButton({
                                            option,
