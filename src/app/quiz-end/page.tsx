@@ -6,7 +6,7 @@ import {redirect} from 'next/navigation';
 import {getTotalScore} from "@/services/scoreService";
 import {createSupabaseServerClient} from "@/utils/supabase/server";
 import {validate} from "@/services/quizValidationService";
-import {getRankingByQuizToken, getRankings} from "@/services/rankingService";
+import {getRankingByQuizToken} from "@/services/rankingService";
 import {RANKING_PAGE_SIZE_UNDER_SUBMIT_FORM} from "@/constants/ranking_constant";
 
 export const revalidate = 0;
@@ -36,11 +36,6 @@ export default async function Page({searchParams}: {
     redirect('/ranking');
   }
 
-  const page = 1;
-  const orderByScore = true;
-  const pageSize = RANKING_PAGE_SIZE_UNDER_SUBMIT_FORM;
-  const rankings = await getRankings(supabaseClient, page, pageSize, orderByScore);
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white shadow-md overflow-hidden min-h-screen rounded-none sm:min-h-0 sm:rounded-lg">
@@ -57,10 +52,10 @@ export default async function Page({searchParams}: {
           </div>
 
           <RankingSubmitForm quizToken={quizToken}/>
-          <RankingList initialRankings={rankings}
-                       initialPage={page}
-                       pageSize={pageSize}
-                       initialOrderByScore={orderByScore}/>
+          <RankingList initialRankings={[]}
+                       initialPage={1}
+                       pageSize={RANKING_PAGE_SIZE_UNDER_SUBMIT_FORM}
+                       initialOrderByScore={true}/>
         </div>
       </div>
     </div>

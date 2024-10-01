@@ -17,7 +17,6 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
   const [orderByScore, setOrderByScore] = useState(initialOrderByScore)
   const [rankings, setRankings] = useState<Ranking[]>(initialRankings)
   const [loading, setLoading] = useState(false)
-  const [isInitialRender, setIsInitialRender] = useState(true) // 첫페이지 그릴때는 SSR로 수행
   const [nextPageAvailable, setNextPageAvailable] = useState(true)
 
   const fetchRankings = async (page: number): Promise<Ranking[]> => {
@@ -32,11 +31,6 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
   };
 
   useEffect(() => {
-    if (isInitialRender) {
-      setIsInitialRender(false);
-      return;
-    }
-
     setCurrentPage(() => {
       updateRankings(1);
       return 1;

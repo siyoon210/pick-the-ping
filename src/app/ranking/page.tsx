@@ -1,19 +1,11 @@
 import {Home} from 'lucide-react';
 import Link from 'next/link';
 import RankingList from "@/components/ranking/RankingList";
-import {getRankings} from "@/services/rankingService";
-import {createSupabaseServerClient} from "@/utils/supabase/server";
 import {RANKING_PAGE_SIZE} from "@/constants/ranking_constant";
 
 export const revalidate = 0;
 
 export default async function Page() {
-  const supabaseClient = createSupabaseServerClient();
-  const page = 1;
-  const pageSize = RANKING_PAGE_SIZE;
-  const orderByScore = true;
-  const rankings = await getRankings(supabaseClient, page, pageSize, orderByScore);
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white shadow-md overflow-hidden min-h-screen rounded-none sm:min-h-0 sm:rounded-lg">
@@ -24,10 +16,10 @@ export default async function Page() {
           </Link>
         </div>
         <div className="p-4">
-          <RankingList initialRankings={rankings}
-                       initialPage={page}
-                       pageSize={pageSize}
-                       initialOrderByScore={orderByScore}/>
+          <RankingList initialRankings={[]}
+                       initialPage={1}
+                       pageSize={RANKING_PAGE_SIZE}
+                       initialOrderByScore={true}/>
         </div>
       </div>
     </div>
