@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useEffect, useState} from "react";
-import {ChevronLeft, ChevronRight, Clock, Trophy} from "lucide-react";
+import {ChevronLeft, ChevronRight, Clock, Trophy, CalendarDays} from "lucide-react";
 import {timeoutPromise} from "@/utils/timeout";
 import {RANKING_LOADING_MIN_MS} from "@/constants/ranking_constant";
 
@@ -60,6 +60,27 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
     updateRankings(newPage);
   }
 
+  const formatDate = (timestamp: number) => {
+    const date = new Date(timestamp);
+    const currentYear = new Date().getFullYear();
+    const targetYear = date.getFullYear();
+
+    const options: Intl.DateTimeFormatOptions = {
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Asia/Seoul'
+    };
+
+    // 연도가 다를 때만 year 옵션 추가
+    if (currentYear !== targetYear) {
+      options.year = 'numeric';
+    }
+
+    return date.toLocaleDateString('ko-KR', options);
+  }
+
   if (loading) {
     return (
       <div className="text-center py-8">
@@ -100,6 +121,10 @@ export default function RankingList({initialRankings, initialPage, pageSize, ini
               <span className="text-primary font-bold">{entry.score}점</span>
             </div>
             <p className="text-sm text-gray-600 mt-1">{entry.message}</p>
+            <div className="flex items-center text-xs text-gray-500 mt-1">
+              <CalendarDays className="h-3 w-3 mr-1"/>
+              {formatDate(entry.createdAt)}
+            </div>
           </li>
         ))}
       </ul>

@@ -3,5 +3,5 @@ type Ranking = {
   score: number;
   name: string;
   message: string;
-  createdAt: string;
+  createdAt: number;
 }
