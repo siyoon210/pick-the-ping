@@ -32,7 +32,7 @@ export default function QuizOptionButton({
                                            loadedImages,
                                          }: QuizOptionButtonProps) {
   const postQuizLog = (selectedOption: QuizOption) => {
-    const question = quizQuestion.nameKo
+    const question = quizQuestion.nameKo;
     const selectedOptionNameKo = selectedOption.encryptedNameKo
 
     return fetch(`/api/quiz-log?quiz-token=${quizToken}&question=${encodeURIComponent(question)}&selected-option=${encodeURIComponent(selectedOptionNameKo)}&timer=${timer}`, {
@@ -42,6 +42,10 @@ export default function QuizOptionButton({
 
   const selectImage = (selectedOption: QuizOption) => {
     return () => {
+      if (timer <= 0) {
+        return Promise.resolve();
+      }
+
       const selectedOptionNameKo = base64Decrypt(selectedOption.encryptedNameKo);
       if (selectedOptionNameKo === quizQuestion.nameKo) {
         setSelectedNameKo(selectedOptionNameKo)
